@@ -1,36 +1,51 @@
 import React from 'react';
-import {useRef} from 'react';
+import {useRef, useState} from 'react';
+import { useNavigate } from "react-router-dom";
 
 function ChooseInstrumentsPage() { 
-    const guitar = useRef(new Audio("/project 1 guitar.mp3"));
-    const bass = useRef(new Audio("/project 1 bass.mp3"));
-    const drums = useRef(new Audio("/project 1 drums.mp3"));
-    const pads = useRef(new Audio("/project 1 pads.mp3"));
-    const vox = useRef(new Audio("/project 1 vocals.mp3"));
-    const mutedMaster = useRef(new Audio("/project 1 muted.mp3"));
+    const navigate = useNavigate();
 
-    function playInstrument(instrument) {
-        if (mutedMaster.current.paused) {
-            mutedMaster.current.play();
-            instrument.current.play();
-        }
-        else 
-        {
-            instrument.current.currentTime = mutedMaster.current.currentTime;
-            instrument.current.play();
-        }
+
+    const [selected, setSelected] = React.useState({
+        guitar: false,
+        bass: false,
+        drums: false,
+        pads: false,
+        vocals: false
+    });
+
+    function toggle(name) {
+        setSelected(prev => ({
+        ...prev,
+        [name]: !prev[name]
+        }));
+    }
+
+    function startLevel() {
+        localStorage.setItem("instruments", JSON.stringify(selected));
+        navigate("/level-one");
     }
 
     return (
-    <div>
-        <h1>Choose which instruments you want to hear.</h1>
+        <div>
+        {["guitar", "bass", "drums", "pads","vocals"].map(name => (
+            <button
+                key={name}
+                onClick={() => toggle(name)}
+                style={{
+                    backgroundColor: selected[name] ? "green" : "white",
+                    color: "black",
+                    margin: 10
+                }}
+                >
+                {name}
+            </button>
+        ))}
 
-        <button onClick={() => playInstrument(guitar)}>Guitar</button>
-        <button onClick={() => playInstrument(bass)}>Bass</button>
-        <button onClick={() => playInstrument(drums)}>Drums</button>
-        <button onClick={() => playInstrument(pads)}>Synth Pads</button>
-        <button onClick={() => playInstrument(vox)}>Vocals</button>
-    </div>
+        <button onClick={() => startLevel()}>
+            Start Level
+        </button>
+        </div>
     );
 }
 

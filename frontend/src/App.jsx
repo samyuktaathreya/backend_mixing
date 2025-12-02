@@ -48,6 +48,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/choose-instrument" element={<ChooseInstrumentsPage />} />
+          <Route path="/level-one" element={<ChooseInstrumentsPage />} />
         </Routes>
       </BrowserRouter>
     </>
